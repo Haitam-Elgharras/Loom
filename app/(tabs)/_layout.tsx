@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const NotFound = () => {
+const TabsLayout = () => {
   return (
     <View>
-      <Text>NotFound</Text>
+      <Text>TabsLayout</Text>
     </View>
   );
 };
 
-export default NotFound;
+export default TabsLayout;
 
 const styles = StyleSheet.create({});
