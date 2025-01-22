@@ -4,7 +4,7 @@ import { Tabs } from "expo-router";
 import { icons } from "../../constants";
 
 interface TabIconProps {
-  icon: any; // You can replace 'any' with the specific type if known
+  icon: any;
   color: string;
   name: string;
   focused: boolean;
