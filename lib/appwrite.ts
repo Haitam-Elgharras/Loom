@@ -58,7 +58,7 @@ export async function register(
     if (!newAccount) throw new Error();
 
     const avatarUrl = avatars.getInitials(username);
-    const user = await login(email, password);
+    await login(email, password);
 
     // create a user in the db(our user model)
     const newUser = await databases.createDocument(
