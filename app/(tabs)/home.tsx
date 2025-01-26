@@ -7,12 +7,14 @@ import SearchInput from "@/components/SearchInput";
 import Trending from "@/components/Trending";
 import EmptyState from "@/components/EmptyState";
 import useAppwrite from "@/hooks/useAppwrite";
-import { getAllPosts } from "@/lib/appwrite";
+import { getAllPosts, getLatestPosts } from "@/lib/appwrite";
+import VideoCard from "@/components/VideoCard";
 
 const Home = () => {
   const { loggedInUser } = useGlobalContext();
 
-  const { data: posts, isLoading, refetch } = useAppwrite(getAllPosts);
+  const { data: posts, refetch } = useAppwrite(getAllPosts);
+  const { data: latestPosts } = useAppwrite(getLatestPosts);
 
   const [refreshing, setRefreching] = useState(false);
 
@@ -25,12 +27,9 @@ const Home = () => {
     <>
       <SafeAreaView className="bg-primary h-full">
         <FlatList
-          // data={[{ id: 1 }, { id: 2 }]}
           data={posts}
           keyExtractor={(item) => item.$id.toString()}
-          renderItem={({ item }) => (
-            <Text className="text-3xl text-white">{item.title}</Text>
-          )}
+          renderItem={({ item }) => <VideoCard video={item} />}
           ListHeaderComponent={() => {
             const [searchQuery, setSearchQuery] = useState("");
 
@@ -63,7 +62,7 @@ const Home = () => {
                   <Text className="text-gray-100 text-lg font-pregular mb-3">
                     Latest Videos
                   </Text>
-                  <Trending posts={[{ id: 1 }, { id: 2 }, { id: 3 }]} />
+                  <Trending posts={latestPosts!} />
                 </View>
               </View>
             );
