@@ -6,25 +6,30 @@ import { images } from "@/constants";
 import SearchInput from "@/components/SearchInput";
 import Trending from "@/components/Trending";
 import EmptyState from "@/components/EmptyState";
+import useAppwrite from "@/hooks/useAppwrite";
+import { getAllPosts } from "@/lib/appwrite";
 
 const Home = () => {
   const { loggedInUser } = useGlobalContext();
 
+  const { data: posts, isLoading, refetch } = useAppwrite(getAllPosts);
+
   const [refreshing, setRefreching] = useState(false);
+
   const onRefrech = async () => {
     setRefreching(true);
-    // re call videos to see if any new videos appeard
+    await refetch();
     setRefreching(false);
   };
   return (
     <>
       <SafeAreaView className="bg-primary h-full">
         <FlatList
-          data={[{ id: 1 }, { id: 2 }]}
-          // data={[]}
-          keyExtractor={(item) => item.id.toString()}
+          // data={[{ id: 1 }, { id: 2 }]}
+          data={posts}
+          keyExtractor={(item) => item.$id.toString()}
           renderItem={({ item }) => (
-            <Text className="text-3xl text-white">{item.id}</Text>
+            <Text className="text-3xl text-white">{item.title}</Text>
           )}
           ListHeaderComponent={() => {
             const [searchQuery, setSearchQuery] = useState("");

@@ -17,15 +17,22 @@ export const config = {
   storageId: process.env.EXPO_PUBLIC_APPWRITE_STORAGE_ID || "",
 };
 
+const {
+  endpoint,
+  platform,
+  projectId,
+  databaseId,
+  userCollectionId,
+  videoCollectionId,
+  storageId,
+} = config;
+
 let client: Client;
 let account: Account;
 let databases: Databases;
 
 client = new Client();
-client
-  .setEndpoint(config.endpoint)
-  .setProject(config.projectId)
-  .setPlatform(config.platform);
+client.setEndpoint(endpoint).setProject(projectId).setPlatform(platform);
 
 account = new Account(client);
 const avatars = new Avatars(client);
@@ -87,8 +94,8 @@ export const getCurrentUser = async () => {
     if (!currentAccount) throw new Error();
 
     const currentUser = await databases.listDocuments(
-      config.databaseId,
-      config.userCollectionId,
+      databaseId,
+      userCollectionId,
       [Query.equal("accountId", currentAccount.$id)]
     );
 
@@ -97,5 +104,15 @@ export const getCurrentUser = async () => {
     return currentUser.documents[0];
   } catch (error: any) {
     throw new Error(error.message);
+  }
+};
+
+export const getAllPosts = async () => {
+  try {
+    const posts = await databases.listDocuments(databaseId, videoCollectionId);
+
+    return posts.documents;
+  } catch (error: any) {
+    throw new Error(error);
   }
 };
