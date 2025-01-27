@@ -26,7 +26,7 @@ const TrendingItem = ({ activeItem, item, onPlay }: TrendingItemProps) => {
   const [play, setPlay] = useState(false);
   const isActive = activeItem?.$id === item.$id;
 
-  const player = useVideoPlayer(images.blossom, (player) => {
+  const player = useVideoPlayer(item.video, (player) => {
     player.pause();
     player.loop = true;
   });

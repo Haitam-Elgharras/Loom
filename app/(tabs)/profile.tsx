@@ -67,7 +67,7 @@ const Profile = () => {
                   </View>
                   <View className="w-full flex justify-center items-center">
                     <Text className="text-2xl text-white font-psemibold mt-4">
-                      {loggedInUser.username}
+                      {loggedInUser?.username}
                     </Text>
                     <View className="flex flex-row gap-x-10 mt-6">
                       <View className="flex items-center">

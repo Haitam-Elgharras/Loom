@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { icons, images } from "@/constants";
 import { useVideoPlayer, VideoView } from "expo-video";
 
-// Track both player and its state setter
 let currentPlayer: { player: any; setPlay: (play: boolean) => void } | null =
   null;
 
@@ -34,7 +33,7 @@ const VideoCard = ({
   },
 }: Props) => {
   const [play, setPlay] = useState(false);
-  const player = useVideoPlayer(images.blossom, (player) => {
+  const player = useVideoPlayer(video, (player) => {
     player.pause();
     player.loop = true;
   });

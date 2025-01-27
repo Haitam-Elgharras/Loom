@@ -28,7 +28,7 @@ const Home = () => {
       <SafeAreaView className="bg-primary h-full">
         <FlatList
           data={posts}
-          keyExtractor={(item) => item.$id.toString()}
+          keyExtractor={(item) => item?.$id.toString()}
           renderItem={({ item }) => <VideoCard video={item} />}
           ListHeaderComponent={() => {
             return (
