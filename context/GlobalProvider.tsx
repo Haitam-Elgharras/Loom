@@ -12,6 +12,7 @@ interface GlobalContextType {
   isLoggedIn: boolean;
   isLoading: boolean;
   setIsLoggedIn: (loggedIn: boolean) => void;
+  setLoggedInUser: (user: any) => void;
 }
 
 const GlobalContext = createContext<GlobalContextType>({} as GlobalContextType);
@@ -49,6 +50,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         isLoggedIn,
         isLoading,
         setIsLoggedIn,
+        setLoggedInUser,
       }}
     >
       {children}

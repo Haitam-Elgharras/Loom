@@ -44,6 +44,7 @@ export async function login(email: string, password: string) {
   console.info(config);
   try {
     const session = await account.createEmailPasswordSession(email, password);
+
     return session;
   } catch (error: any) {
     throw new Error(error.message); // Handle errors
@@ -92,7 +93,7 @@ export const getCurrentUser = async (): Promise<any> => {
   try {
     const currentAccount = await account.get();
 
-    if (!currentAccount) throw new Error();
+    if (!currentAccount) return;
 
     const currentUser = await databases.listDocuments(
       databaseId,
@@ -138,6 +139,28 @@ export const searchPosts = async (query: string): Promise<any> => {
     ]);
 
     return posts.documents;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const getPostsByUserId = async (id: string): Promise<any> => {
+  try {
+    const posts = await databases.listDocuments(databaseId, videoCollectionId, [
+      Query.equal("user", id),
+    ]);
+
+    return posts.documents;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const signout = async () => {
+  try {
+    const session = await account.deleteSession("current");
+
+    return session;
   } catch (error: any) {
     throw new Error(error);
   }
