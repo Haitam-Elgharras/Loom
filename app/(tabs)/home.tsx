@@ -31,8 +31,6 @@ const Home = () => {
           keyExtractor={(item) => item.$id.toString()}
           renderItem={({ item }) => <VideoCard video={item} />}
           ListHeaderComponent={() => {
-            const [searchQuery, setSearchQuery] = useState("");
-
             return (
               <View className="flex my-6 px-4 space-y-6">
                 <View className="flex flex-row justify-between items-start mb-6">
@@ -52,11 +50,7 @@ const Home = () => {
                     />
                   </View>
                 </View>
-                <SearchInput
-                  placeholder="Search for a video topic"
-                  value={searchQuery}
-                  handleChangedText={(text) => setSearchQuery(text)}
-                />
+                <SearchInput placeholder="Search for a video topic" />
 
                 <View className="w-full flex-1 pt-5 pb-5">
                   <Text className="text-gray-100 text-lg font-pregular mb-3">

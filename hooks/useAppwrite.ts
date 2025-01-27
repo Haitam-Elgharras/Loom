@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 
-const useAppwrite = (fn: any) => {
+const useAppwrite = <T>(fn: () => Promise<T>) => {
   const [isLoading, setIsLaoding] = useState(false);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<T | null>(null);
 
   const fetchData = async () => {
     setIsLaoding(true);

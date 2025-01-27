@@ -1,3 +1,4 @@
+import { Video } from "@/components/VideoCard";
 import {
   Client,
   Account,
@@ -87,7 +88,7 @@ export async function register(
   }
 }
 
-export const getCurrentUser = async () => {
+export const getCurrentUser = async (): Promise<any> => {
   try {
     const currentAccount = await account.get();
 
@@ -107,7 +108,7 @@ export const getCurrentUser = async () => {
   }
 };
 
-export const getAllPosts = async () => {
+export const getAllPosts = async (): Promise<any> => {
   try {
     const posts = await databases.listDocuments(databaseId, videoCollectionId);
 
@@ -117,11 +118,23 @@ export const getAllPosts = async () => {
   }
 };
 
-export const getLatestPosts = async () => {
+export const getLatestPosts = async (): Promise<any> => {
   try {
     const posts = await databases.listDocuments(databaseId, videoCollectionId, [
       Query.orderDesc("$createdAt"),
       Query.limit(7),
+    ]);
+
+    return posts.documents;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const searchPosts = async (query: string): Promise<any> => {
+  try {
+    const posts = await databases.listDocuments(databaseId, videoCollectionId, [
+      Query.search("title", query),
     ]);
 
     return posts.documents;
