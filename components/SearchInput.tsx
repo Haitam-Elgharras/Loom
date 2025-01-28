@@ -6,9 +6,10 @@ import { router, usePathname } from "expo-router";
 interface Props {
   placeholder: string;
   value?: string;
+  handleSearch?: (query: string) => void;
 }
 
-const SearchInput = ({ placeholder, value }: Props) => {
+const SearchInput = ({ placeholder, value, handleSearch }: Props) => {
   const pathname = usePathname();
   const [query, setQuery] = useState(value || "");
   return (
@@ -26,6 +27,7 @@ const SearchInput = ({ placeholder, value }: Props) => {
           if (!query) return;
 
           if (pathname.startsWith("/search")) router.setParams({ query });
+          else if (handleSearch) handleSearch(query);
           else router.push(`/search/${query}`);
         }}
         className="absolute right-5"

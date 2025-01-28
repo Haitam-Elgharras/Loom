@@ -1,7 +1,8 @@
-import { Text, View, Image, TouchableOpacity } from "react-native";
+import { Text, View, Image, TouchableOpacity, Pressable } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { icons, images } from "@/constants";
+import { icons } from "@/constants";
 import { useVideoPlayer, VideoView } from "expo-video";
+import { toggleBookmark } from "@/lib/appwrite";
 
 let currentPlayer: { player: any; setPlay: (play: boolean) => void } | null =
   null;
@@ -21,6 +22,7 @@ export interface Video {
 
 interface Props {
   video: Video;
+  onDelete?: (videoId: string) => void;
 }
 
 const VideoCard = ({
@@ -31,8 +33,10 @@ const VideoCard = ({
     video,
     user: { username, avatar },
   },
+  onDelete,
 }: Props) => {
   const [play, setPlay] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const player = useVideoPlayer(video, (player) => {
     player.pause();
     player.loop = true;
@@ -66,7 +70,7 @@ const VideoCard = ({
 
   return (
     <View className="items-center px-4 mb-14">
-      <View className="flex-row gap-3 items-start">
+      <View className="flex-row gap-3 items-start relative">
         <View className="flex-row justify-center items-center flex-1">
           <View className="w-[46px] h-[46px] rounded-[9px] border border-secondary justify-center items-center">
             <Image
@@ -90,8 +94,61 @@ const VideoCard = ({
             </Text>
           </View>
         </View>
-        <View className="pt-2">
-          <Image source={icons.menu} className="w-5 h-5" resizeMode="contain" />
+        <View className="relative">
+          <TouchableOpacity
+            className="pt-2"
+            onPress={() => setShowMenu(!showMenu)}
+          >
+            <Image
+              source={icons.menu}
+              className="w-5 h-5"
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+
+          {showMenu && (
+            <>
+              <Pressable
+                className="absolute top-0 left-0 w-screen h-screen"
+                onPress={() => setShowMenu(false)}
+              />
+              <View className="absolute right-0 top-10 bg-[#2A2A2A] rounded-lg overflow-hidden w-32 shadow-lg z-50">
+                <TouchableOpacity
+                  onPress={() => {
+                    toggleBookmark($id);
+                    setShowMenu(false);
+                  }}
+                  className="flex-row items-center px-4 py-3 gap-x-3"
+                >
+                  <Image
+                    source={icons.bookmark}
+                    className="w-5 h-5"
+                    resizeMode="contain"
+                  />
+                  <Text className="text-white text-sm font-pregular">Save</Text>
+                </TouchableOpacity>
+
+                <View className="h-[1px] bg-gray-700" />
+
+                <TouchableOpacity
+                  onPress={() => {
+                    onDelete?.($id);
+                    setShowMenu(false);
+                  }}
+                  className="flex-row items-center px-4 py-3 gap-x-3"
+                >
+                  <Image
+                    source={icons.trash}
+                    className="w-5 h-5"
+                    resizeMode="contain"
+                  />
+                  <Text className="text-white text-sm font-pregular">
+                    Delete
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
         </View>
       </View>
 

@@ -5,7 +5,6 @@ import path from "../assets/images/path.png";
 import logo from "../assets/images/logo.png";
 import logoSmall from "../assets/images/logo-small.png";
 import empty from "../assets/images/empty.png";
-import blossom from "../assets/cherry_blossom.mp4";
 
 export default {
   profile,
@@ -15,5 +14,4 @@ export default {
   logo,
   logoSmall,
   empty,
-  blossom,
 };

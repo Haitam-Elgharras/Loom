@@ -1,4 +1,3 @@
-import { Video } from "@/components/VideoCard";
 import {
   Client,
   Account,
@@ -148,6 +147,49 @@ export const searchPosts = async (query: string): Promise<any> => {
     return posts.documents;
   } catch (error: any) {
     throw new Error(error);
+  }
+};
+
+export const searchSavedPosts = async (query: string): Promise<any> => {
+  try {
+    const user = await getCurrentUser();
+
+    if (!user.savedPosts || !query) {
+      return user.savedPosts;
+    }
+
+    const filteredPosts = user.savedPosts.filter((post: any) =>
+      post.title.toLowerCase().includes(query.toLowerCase())
+    );
+
+    return filteredPosts;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const toggleBookmark = async (videoId: string): Promise<any> => {
+  try {
+    const user = await getCurrentUser();
+
+    const savedPosts = user.savedPosts.some((post: any) => post.$id === videoId)
+      ? user.savedPosts
+          .filter((post: any) => post.$id !== videoId)
+          .map((post: any) => post.$id)
+      : [...user.savedPosts, videoId];
+
+    const updatedUser = await databases.updateDocument(
+      databaseId,
+      userCollectionId,
+      user.$id,
+      {
+        savedPosts: savedPosts,
+      }
+    );
+
+    return updatedUser;
+  } catch (error: any) {
+    throw new Error(`Failed to bookmark: ${error.message}`);
   }
 };
 
