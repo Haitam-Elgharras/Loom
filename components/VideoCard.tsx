@@ -2,12 +2,14 @@ import { Text, View, Image, TouchableOpacity, Pressable } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { icons } from "@/constants";
 import { useVideoPlayer, VideoView } from "expo-video";
-import { toggleBookmark } from "@/lib/appwrite";
+import { deleteVideo, toggleBookmark } from "@/lib/appwrite";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 let currentPlayer: { player: any; setPlay: (play: boolean) => void } | null =
   null;
 
 export interface Creator {
+  $id: string;
   username: string;
   avatar: string;
 }
@@ -22,7 +24,6 @@ export interface Video {
 
 interface Props {
   video: Video;
-  onDelete?: (videoId: string) => void;
 }
 
 const VideoCard = ({
@@ -31,12 +32,15 @@ const VideoCard = ({
     title,
     thumbnail,
     video,
-    user: { username, avatar },
+    user: { $id: creatorId, username, avatar },
   },
-  onDelete,
 }: Props) => {
   const [play, setPlay] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+
+  const { loggedInUser } = useGlobalContext();
+  const isCreator = loggedInUser.$id == creatorId;
+
   const player = useVideoPlayer(video, (player) => {
     player.pause();
     player.loop = true;
@@ -130,22 +134,24 @@ const VideoCard = ({
 
                 <View className="h-[1px] bg-gray-700" />
 
-                <TouchableOpacity
-                  onPress={() => {
-                    onDelete?.($id);
-                    setShowMenu(false);
-                  }}
-                  className="flex-row items-center px-4 py-3 gap-x-3"
-                >
-                  <Image
-                    source={icons.trash}
-                    className="w-5 h-5"
-                    resizeMode="contain"
-                  />
-                  <Text className="text-white text-sm font-pregular">
-                    Delete
-                  </Text>
-                </TouchableOpacity>
+                {isCreator && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      deleteVideo($id);
+                      setShowMenu(false);
+                    }}
+                    className="flex-row items-center px-4 py-3 gap-x-3"
+                  >
+                    <Image
+                      source={icons.trash}
+                      className="w-5 h-5"
+                      resizeMode="contain"
+                    />
+                    <Text className="text-white text-sm font-pregular">
+                      Delete
+                    </Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </>
           )}

@@ -45,7 +45,6 @@ storage = new Storage(client);
 
 // Login function
 export async function login(email: string, password: string) {
-  console.info(config);
   try {
     const session = await account.createEmailPasswordSession(email, password);
 
@@ -289,6 +288,14 @@ export const createVideo = async (form: any): Promise<any> => {
     );
 
     return newPost;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const deleteVideo = async (videoId: string): Promise<any> => {
+  try {
+    await databases.deleteDocument(databaseId, videoCollectionId, videoId);
   } catch (error: any) {
     throw new Error(error.message);
   }
